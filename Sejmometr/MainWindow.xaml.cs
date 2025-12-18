@@ -165,7 +165,6 @@ namespace Sejmometr
                     }
                     ListaWynikow.ItemsSource = ladnaLista.OrderBy(w => w.Glos).ThenBy(w => w.NazwiskoImie);
 
-                    // --- AKTUALIZACJA WYKRESU ---
                     SeriesCollection wykresDane = new SeriesCollection();
                     if (countYes > 0) wykresDane.Add(new PieSeries { Title = "ZA", Values = new ChartValues<int> { countYes }, Fill = System.Windows.Media.Brushes.Green, DataLabels = true });
                     if (countNo > 0) wykresDane.Add(new PieSeries { Title = "PRZECIW", Values = new ChartValues<int> { countNo }, Fill = System.Windows.Media.Brushes.Red, DataLabels = true });

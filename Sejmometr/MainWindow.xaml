@@ -1,0 +1,131 @@
+﻿<Window x:Class="Sejmometr.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="Sejmometr - Informatyka Społeczna" Height="800" Width="1000">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10">
+
+            <StackPanel Orientation="Horizontal" Margin="0,5">
+                <TextBlock Text=" Wybierz posiedzenie:" VerticalAlignment="Center" Margin="5"/>
+                <ComboBox Name="CmbPosiedzenia" Width="250" Height="30" 
+              DisplayMemberPath="OpisPosiedzenia" 
+              SelectedValuePath="Number"
+              VerticalContentAlignment="Center"/>
+
+                <Button Name="BtnPobierzListeGlosowan" Content="Załaduj listę głosowań" Margin="10,0,0,0" Padding="10,5" Click="BtnPobierzListeGlosowan_Click"/>
+            </StackPanel>
+
+            <TextBlock Text=" Wybierz głosowanie z listy:" Margin="5,10,0,5" FontWeight="SemiBold"/>
+            <ComboBox Name="CmbGlosowania" 
+                      IsEditable="True"
+                      StaysOpenOnEdit="True"
+                      TextSearch.TextPath="OpisWyswietlany"
+                      DisplayMemberPath="OpisWyswietlany" 
+                      SelectedValuePath="VotingNumber"
+                      Height="30" Margin="5,0,10,0"/>
+
+            <TextBlock Text="Pełny temat głosowania:" Margin="5,10,0,2"/>
+            <TextBox x:Name="TxtTytulGlosowania" 
+                     Height="50" 
+                     TextWrapping="Wrap" 
+                     VerticalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     Background="#FAFAFA"
+                     BorderBrush="LightGray"
+                     Margin="5,0,10,0"
+                     Padding="5"/>
+
+            <StackPanel Orientation="Vertical" Margin="5,10,0,0">
+                <CheckBox x:Name="ChkBuntownicy" 
+                          Content="Pokaż tylko buntowników (głosowali inaczej niż ich klub)" 
+                          FontSize="14"
+                          Foreground="DarkRed"
+                          Click="BtnPobierzGlosowanie_Click"/>
+
+                <TextBlock Text="Filtruj typ głosu:" Margin="0,10,0,5" FontWeight="Bold" FontSize="12"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="ChkZa" Content="ZA" IsChecked="True" Margin="0,0,15,0" Foreground="Green" FontWeight="Bold" Click="BtnPobierzGlosowanie_Click"/>
+                    <CheckBox x:Name="ChkPrzeciw" Content="PRZECIW" IsChecked="True" Margin="0,0,15,0" Foreground="Red" FontWeight="Bold" Click="BtnPobierzGlosowanie_Click"/>
+                    <CheckBox x:Name="ChkWstrzymal" Content="WSTRZYMAŁ SIĘ" IsChecked="True" Margin="0,0,15,0" Foreground="Orange" FontWeight="Bold" Click="BtnPobierzGlosowanie_Click"/>
+                    <CheckBox x:Name="ChkNieobecny" Content="NIEOBECNY" IsChecked="True" Foreground="Gray" FontWeight="Bold" Click="BtnPobierzGlosowanie_Click"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Button Name="BtnPobierzGlosowanie" 
+                    Content="POBIERZ WYNIKI I ANALIZUJ" 
+                    Margin="0,15,0,0" 
+                    Height="40"
+                    FontWeight="Bold"
+                    FontSize="14"
+                    Click="BtnPobierzGlosowanie_Click"/>
+            <Button Name="BtnZapiszPDF" 
+                    Content="EKSPORTUJ WYNIKI DO PDF" 
+                    Margin="0,5,0,0" 
+                    Height="30"
+                    Background="LightBlue"
+                    Click="BtnZapiszPDF_Click"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox Name="ListaWynikow" Grid.Column="0" HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{Binding KolorTla}" CornerRadius="5" Padding="5" Margin="2" BorderBrush="Gray" BorderThickness="0.5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0" Source="{Binding ZdjecieUrl}" Height="60" Width="45" Stretch="UniformToFill"/>
+
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                    <TextBlock Text="{Binding NazwiskoImie}" FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock Text="{Binding Klub}" Foreground="DarkSlateGray"/>
+                                    <TextBlock Text="{Binding InfoDodatkowe}" Foreground="Red" FontWeight="Bold"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Column="2" Text="{Binding Glos}" FontSize="18" VerticalAlignment="Center" FontWeight="Bold" Margin="10"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Grid Grid.Column="1" Margin="10,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Rozkład Głosów" HorizontalAlignment="Center" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+
+                <lvc:PieChart Name="WykresGlosow" Grid.Row="1" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}">
+                    <lvc:PieChart.SeriesColors>
+                        <lvc:ColorsCollection>
+                            <Color>#2ECC71</Color>
+                            <Color>#E74C3C</Color>
+                            <Color>#F1C40F</Color>
+                            <Color>#95A5A6</Color>
+                        </lvc:ColorsCollection>
+                    </lvc:PieChart.SeriesColors>
+                </lvc:PieChart>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -25,4 +25,4 @@ Sejmometr to aplikacja desktopowa napisana w technologii **C# WPF**, która pozw
 
 1. Sklonuj repozytorium:
    ```bash
-   git clone [https://github.com/gosztaaa0/sejmometr.git](https://github.com/gosztaaa0/sejmometr.git)
+   git clone https://github.com/gosztaaa0/sejmometr.git
